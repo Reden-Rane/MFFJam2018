@@ -1,0 +1,16 @@
+[
+{
+  "modid": "pigmessenger",
+  "name": "Pig Messenger",
+  "description": "",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Reden"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
