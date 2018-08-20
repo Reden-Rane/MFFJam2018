@@ -1,13 +1,13 @@
 [
 {
-  "modid": "pigmessenger",
-  "name": "Pig Messenger",
+  "modid": "voicechat",
+  "name": "Voice chat",
   "description": "",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["Reden"],
+  "authorList": ["Charles Javerliat"],
   "credits": "",
   "logoFile": "",
   "screenshots": [],
