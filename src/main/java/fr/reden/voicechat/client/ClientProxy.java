@@ -2,6 +2,7 @@ package fr.reden.voicechat.client;
 
 import fr.reden.voicechat.client.audio.AudioManager;
 import fr.reden.voicechat.common.CommonProxy;
+import fr.reden.voicechat.common.item.ItemRegistry;
 
 public class ClientProxy extends CommonProxy
 {
@@ -9,6 +10,7 @@ public class ClientProxy extends CommonProxy
     public void preInit()
     {
         super.preInit();
+        ItemRegistry.registerItemModels();
     }
 
     @Override

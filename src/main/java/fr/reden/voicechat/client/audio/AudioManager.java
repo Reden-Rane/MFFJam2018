@@ -1,13 +1,18 @@
 package fr.reden.voicechat.client.audio;
 
 import fr.reden.voicechat.common.VoiceChatMod;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.openal.*;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.io.IOException;
 
 public class AudioManager
 {
     private static AudioManager instance;
 
     public Source testPlaybackSource = new Source();
+    public Source spaceSource = new Source();
 
     public void init()
     {
@@ -17,6 +22,20 @@ public class AudioManager
         if (!ALC10.alcIsExtensionPresent(AL.getDevice(), "ALC_EXT_CAPTURE"))
         {
             throw new OpenALException("ALC_EXT_CAPTURE extension not available");
+        }
+
+        testPlaybackSource.setPosition(new Vector3f(0, 0, 0), true);
+        spaceSource.setPosition(new Vector3f(0, 0, 0), true);
+//        spaceSource.setLooping(true);
+
+        try
+        {
+            int buffer = AudioUtil.wavToBuffer(new ResourceLocation(VoiceChatMod.MOD_ID, "sounds/talkie_begin.wav"));
+            spaceSource.play(buffer);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
 
         VoiceChatMod.logger.info("Initializing recorder...");

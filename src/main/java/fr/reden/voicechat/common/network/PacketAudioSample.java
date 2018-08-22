@@ -55,6 +55,8 @@ public class PacketAudioSample implements IMessage, IMessageHandler<PacketAudioS
     {
         if (ctx.side.isServer())
         {
+            //Renvoie simplement l'audio vers les joueurs connectés au serveur
+            //TODO Envoyer uniquement aux joueurs sur le bon channel
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> NetworkManager.getInstance().getNetworkWrapper().sendToAll(new PacketAudioSample(message.bufferSize, message.audioDataBuffer)));
         }
         else
@@ -62,9 +64,9 @@ public class PacketAudioSample implements IMessage, IMessageHandler<PacketAudioS
             Minecraft.getMinecraft().addScheduledTask(() ->
             {
                 message.audioDataBuffer.rewind();
-                int oaBuffer = AL10.alGenBuffers();
-                AL10.alBufferData(oaBuffer, SAMPLE_FORMAT, message.audioDataBuffer, SAMPLE_FREQUENCY);
-                AudioManager.getInstance().testPlaybackSource.pushBufferToQueue(oaBuffer);
+                int buf = AL10.alGenBuffers();
+                AL10.alBufferData(buf, SAMPLE_FORMAT, message.audioDataBuffer, SAMPLE_FREQUENCY);
+                AudioManager.getInstance().testPlaybackSource.pushBufferToQueue(buf, true);
                 AudioManager.getInstance().testPlaybackSource.popBufferFromQueue();
             });
         }

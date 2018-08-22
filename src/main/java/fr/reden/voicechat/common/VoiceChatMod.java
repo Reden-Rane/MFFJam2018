@@ -17,12 +17,12 @@ public class VoiceChatMod
     public static final String MOD_ID = "voicechat";
     public static final String MOD_VERSION = "1.0";
     public static final String CLIENT_PROXY = "fr.reden.voicechat.client.ClientProxy";
-    public static final String COMMON_PROXY = "fr.reden.voicechat.common.CommonProxy";
+    public static final String SERVER_PROXY = "fr.reden.voicechat.server.ServerProxy";
 
     @Mod.Instance
     private static VoiceChatMod instance;
 
-    @SidedProxy(clientSide = CLIENT_PROXY, serverSide = COMMON_PROXY)
+    @SidedProxy(clientSide = CLIENT_PROXY, serverSide = SERVER_PROXY)
     private static CommonProxy proxy;
 
     public static final Logger logger = LogManager.getLogger(MOD_ID);

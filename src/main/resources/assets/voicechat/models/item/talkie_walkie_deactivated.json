@@ -1,0 +1,6 @@
+{
+  "parent": "voicechat:item/talkie_walkie",
+  "textures": {
+    "0": "voicechat:items/talkie_walkie_deactivated"
+  }
+}

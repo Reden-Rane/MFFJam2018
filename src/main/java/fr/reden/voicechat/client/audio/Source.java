@@ -1,6 +1,7 @@
 package fr.reden.voicechat.client.audio;
 
 import org.lwjgl.openal.AL10;
+import org.lwjgl.util.vector.Vector3f;
 
 import static org.lwjgl.openal.AL10.*;
 
@@ -11,18 +12,15 @@ public class Source
     public Source()
     {
         this.sourceID = AL10.alGenSources();
-        AL10.alSourcef(this.sourceID, AL10.AL_GAIN, 1);
-        AL10.alSourcef(this.sourceID, AL10.AL_PITCH, 1);
-
-        AL10.alSourcei(this.sourceID, AL_SOURCE_RELATIVE, AL_TRUE);
-        AL10.alSource3f(this.sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
+        setGain(1);
+        setPitch(1);
     }
 
-    public void pushBufferToQueue(int buffer)
+    public void pushBufferToQueue(int buffer, boolean forcePlay)
     {
         AL10.alSourceQueueBuffers(this.sourceID, buffer);
 
-        if (!isPlaying())
+        if (!isPlaying() && forcePlay)
         {
             this.play();
         }
@@ -39,6 +37,17 @@ public class Source
         }
     }
 
+    public void setPosition(Vector3f pos, boolean relativeToListener)
+    {
+        AL10.alSourcei(this.sourceID, AL_SOURCE_RELATIVE, relativeToListener ? AL_TRUE : AL_FALSE);
+        AL10.alSource3f(this.sourceID, AL_POSITION, pos.x, pos.x, pos.z);
+    }
+
+    public void setLooping(boolean looping)
+    {
+        AL10.alSourcei(this.sourceID, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);
+    }
+
     public void play()
     {
         AL10.alSourcePlay(this.sourceID);
@@ -46,8 +55,7 @@ public class Source
 
     public void play(int buffer)
     {
-        AL10.alSourcei(this.sourceID, AL10.AL_BUFFER, buffer);
-        play();
+        pushBufferToQueue(buffer, true);
     }
 
     public void pause()
@@ -55,7 +63,7 @@ public class Source
         AL10.alSourcePause(this.sourceID);
     }
 
-    public void setVolume(float volume)
+    public void setGain(float volume)
     {
         AL10.alSourcef(this.sourceID, AL10.AL_GAIN, volume);
     }
