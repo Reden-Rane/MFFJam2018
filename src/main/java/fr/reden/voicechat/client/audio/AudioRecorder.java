@@ -1,6 +1,6 @@
 package fr.reden.voicechat.client.audio;
 
-import fr.reden.voicechat.common.NetworkManager;
+import fr.reden.voicechat.common.network.NetworkManager;
 import fr.reden.voicechat.common.network.PacketAudioSample;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.FMLCommonHandler;

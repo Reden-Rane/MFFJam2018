@@ -1,0 +1,12 @@
+{
+  "talkie_switch": {
+    "category": "item",
+    "subtitle": "subtitle.talkie_switch",
+    "sounds": ["voicechat:talkie_switch"]
+  },
+  "talkie_transmission_notify": {
+    "category": "item",
+    "subtitle": "subtitle.talkie_transmission_notify",
+    "sounds": ["voicechat:talkie_transmission_notify"]
+  }
+}

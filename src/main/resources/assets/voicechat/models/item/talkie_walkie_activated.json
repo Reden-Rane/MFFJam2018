@@ -1,5 +1,4 @@
 {
-  "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
   "parent": "voicechat:item/talkie_walkie",
   "textures": {
     "0": "voicechat:items/talkie_walkie_activated"

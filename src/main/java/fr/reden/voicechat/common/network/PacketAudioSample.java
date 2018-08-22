@@ -1,7 +1,6 @@
 package fr.reden.voicechat.common.network;
 
 import fr.reden.voicechat.client.audio.AudioManager;
-import fr.reden.voicechat.common.NetworkManager;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
@@ -17,7 +16,7 @@ import java.nio.ByteBuffer;
 import static fr.reden.voicechat.client.audio.AudioRecorder.SAMPLE_FORMAT;
 import static fr.reden.voicechat.client.audio.AudioRecorder.SAMPLE_FREQUENCY;
 
-public class PacketAudioSample implements IMessage, IMessageHandler<PacketAudioSample, IMessage>
+public class PacketAudioSample implements IMessage
 {
     private int bufferSize;
     private ByteBuffer audioDataBuffer;
@@ -50,16 +49,24 @@ public class PacketAudioSample implements IMessage, IMessageHandler<PacketAudioS
         buf.writeBytes(copy);
     }
 
-    @Override
-    public IMessage onMessage(PacketAudioSample message, MessageContext ctx)
+    public static class ServerHandler implements IMessageHandler<PacketAudioSample, IMessage>
     {
-        if (ctx.side.isServer())
+        @Override
+        public IMessage onMessage(PacketAudioSample message, MessageContext ctx)
         {
             //Renvoie simplement l'audio vers les joueurs connectés au serveur
             //TODO Envoyer uniquement aux joueurs sur le bon channel
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> NetworkManager.getInstance().getNetworkWrapper().sendToAll(new PacketAudioSample(message.bufferSize, message.audioDataBuffer)));
+
+            return null;
         }
-        else
+    }
+
+    public static class ClientHandler implements IMessageHandler<PacketAudioSample, IMessage>
+    {
+
+        @Override
+        public IMessage onMessage(PacketAudioSample message, MessageContext ctx)
         {
             Minecraft.getMinecraft().addScheduledTask(() ->
             {
@@ -69,8 +76,7 @@ public class PacketAudioSample implements IMessage, IMessageHandler<PacketAudioS
                 AudioManager.getInstance().testPlaybackSource.pushBufferToQueue(buf, true);
                 AudioManager.getInstance().testPlaybackSource.popBufferFromQueue();
             });
+            return null;
         }
-
-        return null;
     }
 }

@@ -1,1 +1,9 @@
 item.talkie_walkie.name=Walkie-Talkie
+
+gui.talkie_walkie.frequency=Frequency
+gui.talkie_walkie.name=Name
+gui.talkie_walkie.switch=Switch
+gui.talkie_walkie.no_custom_frequency=No custom frequencies.
+
+subtitle.talkie_switch=Static Noise
+subtitle.talkie_transmission_notify=Transmission beep

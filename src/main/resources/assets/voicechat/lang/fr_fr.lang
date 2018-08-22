@@ -1,1 +1,8 @@
 item.talkie_walkie.name=Talkie-Walkie
+
+gui.talkie_walkie.frequency=Fréquence
+gui.talkie_walkie.name=Nom
+gui.talkie_walkie.switch=Changer
+
+subtitle.talkie_switch=Bruit parasite
+subtitle.talkie_transmission_notify=Bip transmission
