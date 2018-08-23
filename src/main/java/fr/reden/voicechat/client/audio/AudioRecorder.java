@@ -1,8 +1,12 @@
 package fr.reden.voicechat.client.audio;
 
+import fr.reden.voicechat.common.item.ItemRegistry;
+import fr.reden.voicechat.common.item.ItemTalkieWalkie;
 import fr.reden.voicechat.common.network.NetworkManager;
 import fr.reden.voicechat.common.network.PacketAudioSample;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.ALC10;
@@ -12,6 +16,8 @@ import org.lwjgl.openal.OpenALException;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static org.lwjgl.openal.AL10.*;
 
@@ -44,9 +50,6 @@ public class AudioRecorder extends Thread
     private final ALCdevice microphoneDevice;
 
     private boolean isRecording = false;
-
-    //TODO - SUPPRIMER, SEULEMENT POUR LES TESTS
-    private final Source playbackSource = new Source();
 
     /**
      * @param microphoneDeviceName Le microphone à utiliser
@@ -98,27 +101,31 @@ public class AudioRecorder extends Thread
                 {
                     ALC11.alcCaptureSamples(this.microphoneDevice, this.dataBuffer, this.sampleBufferSize);
 
-//                    System.out.println("Recorded data");
-
-                    if (FMLCommonHandler.instance().getMinecraftServerInstance() != null && Minecraft.getMinecraft().player != null && Minecraft.getMinecraft().world != null)
+                    if (Minecraft.getMinecraft().player != null && Minecraft.getMinecraft().world != null)
                     {
-                        Minecraft.getMinecraft().addScheduledTask(() -> NetworkManager.getInstance().getNetworkWrapper().sendToServer(new PacketAudioSample(sampleBufferSize * SAMPLE_BYTES_SIZE, dataBuffer)));
+                        Set<Integer> frequencies = new TreeSet<>();
+
+                        EntityPlayer player = Minecraft.getMinecraft().player;
+
+                        for (ItemStack stack : player.inventory.mainInventory)
+                        {
+                            if (!stack.isEmpty() && stack.getItem() == ItemRegistry.TALKIE_WALKIE)
+                            {
+                                boolean activated = ((ItemTalkieWalkie) ItemRegistry.TALKIE_WALKIE).isActivated(stack);
+                                int frequency = ((ItemTalkieWalkie) ItemRegistry.TALKIE_WALKIE).getFrequency(stack);
+
+                                if (activated)
+                                {
+                                    frequencies.add(frequency);
+                                }
+                            }
+                        }
+
+                        if (frequencies.size() > 0)
+                        {
+                            Minecraft.getMinecraft().addScheduledTask(() -> NetworkManager.getInstance().getNetworkWrapper().sendToServer(new PacketAudioSample(player.getUniqueID(), frequencies, sampleBufferSize * SAMPLE_BYTES_SIZE, dataBuffer)));
+                        }
                     }
-
-
-/*                    //Principe à utiliser dans les packets
-                    ByteBuf pktBuf = Unpooled.copiedBuffer(this.dataBuffer);
-                    ByteBuffer newBuf = BufferUtils.createByteBuffer(this.sampleBufferSize * SAMPLE_BYTES_SIZE);
-                    pktBuf.readBytes(newBuf);
-                    newBuf.rewind();*/
-
-//                    buf.writeBytes(this.dataBuffer, this.dataBuffer.remaining());
-
-/*                    //TODO - SUPPRIMER, SEULEMENT POUR LES TESTS
-                    int oaBuffer = AL10.alGenBuffers();
-                    AL10.alBufferData(oaBuffer, SAMPLE_FORMAT, newBuf, SAMPLE_FREQUENCY);
-                    playbackSource.pushBufferToQueue(oaBuffer);
-                    playbackSource.popBufferFromQueue();*/
                 }
             }
         }

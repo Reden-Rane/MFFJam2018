@@ -14,11 +14,11 @@ public class NetworkManager
 
     public void registerNetwork()
     {
-        this.networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("pigmessenger_channel01");
+        this.networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("voice_channel");
         this.networkWrapper.registerMessage(PacketAudioSample.ClientHandler.class, PacketAudioSample.class, 0, Side.CLIENT);
-        this.networkWrapper.registerMessage(PacketAudioSample.ServerHandler.class, PacketAudioSample.class, 0, Side.SERVER);
-        this.networkWrapper.registerMessage(PacketCustomFrequenciesCapability.ClientHandler.class, PacketCustomFrequenciesCapability.class, 1, Side.CLIENT);
-        this.networkWrapper.registerMessage(PacketCustomFrequenciesCapability.ServerHandler.class, PacketCustomFrequenciesCapability.class, 1, Side.SERVER);
+        this.networkWrapper.registerMessage(PacketAudioSample.ServerHandler.class, PacketAudioSample.class, 1, Side.SERVER);
+        this.networkWrapper.registerMessage(PacketCustomFrequenciesCapability.ClientHandler.class, PacketCustomFrequenciesCapability.class, 2, Side.CLIENT);
+        this.networkWrapper.registerMessage(PacketCustomFrequenciesCapability.ServerHandler.class, PacketCustomFrequenciesCapability.class, 3, Side.SERVER);
         NetworkRegistry.INSTANCE.registerGuiHandler(VoiceChatMod.getInstance(), new GuiHandler());
     }
 

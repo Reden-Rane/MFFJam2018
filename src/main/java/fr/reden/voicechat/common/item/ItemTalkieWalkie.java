@@ -52,7 +52,7 @@ public class ItemTalkieWalkie extends Item
 
         if (player.isSneaking())
         {
-            GuiHandler.openGui(GuiHandler.TALKIE_WALKIE_GUI_ID);
+            GuiHandler.openGui(player, GuiHandler.TALKIE_WALKIE_GUI_ID);
             return new ActionResult<>(EnumActionResult.FAIL, heldItem);
         }
         else

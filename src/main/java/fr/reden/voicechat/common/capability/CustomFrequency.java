@@ -1,5 +1,6 @@
 package fr.reden.voicechat.common.capability;
 
+//TODO Préférer un fichier côté serveur qui sera synchro plutôt qu'une capability
 public class CustomFrequency
 {
     public final String name;

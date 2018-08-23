@@ -28,15 +28,15 @@ public class AudioManager
         spaceSource.setPosition(new Vector3f(0, 0, 0), true);
 //        spaceSource.setLooping(true);
 
-        try
+/*        try
         {
-            int buffer = AudioUtil.wavToBuffer(new ResourceLocation(VoiceChatMod.MOD_ID, "sounds/talkie_begin.wav"));
+            int buffer = AudioUtil.wavToBuffer(new ResourceLocation(VoiceChatMod.MOD_ID, "sounds/space.wav"));
             spaceSource.play(buffer);
         }
         catch (IOException e)
         {
             e.printStackTrace();
-        }
+        }*/
 
         VoiceChatMod.logger.info("Initializing recorder...");
         System.out.println("Default capture Device: " + getDefaultCaptureDevice());

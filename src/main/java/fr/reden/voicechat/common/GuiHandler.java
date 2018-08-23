@@ -51,9 +51,8 @@ public class GuiHandler implements IGuiHandler
     }
 
     @SideOnly(Side.CLIENT)
-    public static void openGui(int ID)
+    public static void openGui(EntityPlayer player, int ID)
     {
-        EntityPlayer player = Minecraft.getMinecraft().player;
         openGui(ID, player, player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
     }
 
