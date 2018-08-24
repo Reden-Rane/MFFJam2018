@@ -1,13 +1,13 @@
 package fr.reden.voicechat.client.audio;
 
+import fr.reden.voicechat.client.ClientProxy;
 import fr.reden.voicechat.common.item.ItemRegistry;
 import fr.reden.voicechat.common.item.ItemTalkieWalkie;
-import fr.reden.voicechat.common.network.NetworkManager;
-import fr.reden.voicechat.common.network.PacketAudioSample;
+import fr.reden.voicechat.common.network.audio.AudioPacketUtil;
+import fr.reden.voicechat.common.network.audio.client.IAudioNetworkClientBound;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.ALC11;
@@ -19,6 +19,7 @@ import java.nio.IntBuffer;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static fr.reden.voicechat.common.VoiceChatMod.getProxy;
 import static org.lwjgl.openal.AL10.*;
 
 public class AudioRecorder extends Thread
@@ -39,8 +40,6 @@ public class AudioRecorder extends Thread
     private final int captureInterval;
 
     private final int sampleBufferSize;
-
-    private final ByteBuffer dataBuffer;
 
     private final IntBuffer availableSamples = BufferUtils.createIntBuffer(1);
 
@@ -66,7 +65,6 @@ public class AudioRecorder extends Thread
             throw new OpenALException("Error occured while instanciating AudioRecorder");
         }
 
-        this.dataBuffer = BufferUtils.createByteBuffer(this.sampleBufferSize * SAMPLE_BYTES_SIZE);
         super.start();
     }
 
@@ -99,11 +97,13 @@ public class AudioRecorder extends Thread
 
                 if (this.availableSamples.get(0) >= this.sampleBufferSize)
                 {
-                    ALC11.alcCaptureSamples(this.microphoneDevice, this.dataBuffer, this.sampleBufferSize);
+                    ByteBuffer audioDataBuffer = BufferUtils.createByteBuffer(this.sampleBufferSize * SAMPLE_BYTES_SIZE);
+
+                    ALC11.alcCaptureSamples(this.microphoneDevice, audioDataBuffer, this.sampleBufferSize);
 
                     if (Minecraft.getMinecraft().player != null && Minecraft.getMinecraft().world != null)
                     {
-                        Set<Integer> frequencies = new TreeSet<>();
+                        Set<Integer> frequencySet = new TreeSet<>();
 
                         EntityPlayer player = Minecraft.getMinecraft().player;
 
@@ -116,14 +116,21 @@ public class AudioRecorder extends Thread
 
                                 if (activated)
                                 {
-                                    frequencies.add(frequency);
+                                    frequencySet.add(frequency);
                                 }
                             }
                         }
 
-                        if (frequencies.size() > 0)
+                        if (frequencySet.size() > 0)
                         {
-                            Minecraft.getMinecraft().addScheduledTask(() -> NetworkManager.getInstance().getNetworkWrapper().sendToServer(new PacketAudioSample(player.getUniqueID(), frequencies, sampleBufferSize * SAMPLE_BYTES_SIZE, dataBuffer)));
+                            IAudioNetworkClientBound clientBound = ((ClientProxy) getProxy()).getAudioNetworkClientBound();
+
+                            if (clientBound.getSocket() != null)
+                            {
+                                byte[] audioData = new byte[audioDataBuffer.remaining()];
+                                audioDataBuffer.get(audioData);
+                                clientBound.getSocket().sendPacketToServer(AudioPacketUtil.createAudioPacket(player.getUniqueID(), frequencySet, audioData));
+                            }
                         }
                     }
                 }

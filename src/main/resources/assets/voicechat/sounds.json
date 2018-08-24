@@ -8,5 +8,60 @@
     "category": "item",
     "subtitle": "subtitle.talkie_transmission_notify",
     "sounds": ["voicechat:talkie_transmission_notify"]
+  },
+  "42": {
+    "category": "voice",
+    "subtitle": "subtitle.42",
+    "streaming": true,
+    "sounds": [
+      {
+        "name": "voicechat:42",
+        "stream": true
+      }
+    ]
+  },
+  "192": {
+    "category": "voice",
+    "subtitle": "subtitle.192",
+    "streaming": true,
+    "sounds": [
+      {
+        "name": "voicechat:192",
+        "stream": true
+      }
+    ]
+  },
+  "197": {
+    "category": "voice",
+    "subtitle": "subtitle.197",
+    "streaming": true,
+    "sounds": [
+      {
+        "name": "voicechat:197",
+        "stream": true
+      }
+    ]
+  },
+  "404": {
+    "category": "voice",
+    "subtitle": "subtitle.404",
+    "streaming": true,
+    "sounds": [
+      {
+        "name": "voicechat:404",
+        "stream": true
+      }
+    ]
+  },
+  "elohim": {
+    "category": "voice",
+    "subtitle": "subtitle.elohim",
+    "streaming": true,
+    "sounds": [
+      {
+        "name": "voicechat:elohim",
+        "stream": true
+      }
+    ]
   }
 }

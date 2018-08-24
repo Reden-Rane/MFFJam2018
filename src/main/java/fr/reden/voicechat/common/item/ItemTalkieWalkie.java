@@ -52,8 +52,11 @@ public class ItemTalkieWalkie extends Item
 
         if (player.isSneaking())
         {
-            GuiHandler.openGui(player, GuiHandler.TALKIE_WALKIE_GUI_ID);
-            return new ActionResult<>(EnumActionResult.FAIL, heldItem);
+            if (player.world.isRemote)
+            {
+                GuiHandler.openGui(player, GuiHandler.TALKIE_WALKIE_GUI_ID);
+            }
+            return new ActionResult<>(EnumActionResult.PASS, heldItem);
         }
         else
         {
@@ -96,7 +99,15 @@ public class ItemTalkieWalkie extends Item
 
     public int getFrequency(ItemStack stack)
     {
-        return getStackNBTTagCompound(stack).getInteger("Frequency");
+        int frequency = getStackNBTTagCompound(stack).getInteger("Frequency");
+
+        if (frequency <= 0)
+        {
+            getStackNBTTagCompound(stack).setInteger("Frequency", 1);
+            frequency = 1;
+        }
+
+        return frequency;
     }
 
     public void setFrequency(ItemStack stack, int frequency)

@@ -1,8 +1,7 @@
 package fr.reden.voicechat.common;
 
-import fr.reden.voicechat.client.GuiTalkieWalkie;
+import fr.reden.voicechat.client.gui.GuiTalkieWalkie;
 import fr.reden.voicechat.common.item.ItemRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;

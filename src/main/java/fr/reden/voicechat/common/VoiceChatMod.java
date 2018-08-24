@@ -2,9 +2,7 @@ package fr.reden.voicechat.common;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +13,7 @@ public class VoiceChatMod
 {
     public static final String MOD_NAME = "Voice Chat";
     public static final String MOD_ID = "voicechat";
-    public static final String MOD_VERSION = "1.0";
+    public static final String MOD_VERSION = "1.1";
     public static final String CLIENT_PROXY = "fr.reden.voicechat.client.ClientProxy";
     public static final String SERVER_PROXY = "fr.reden.voicechat.server.ServerProxy";
 
@@ -43,6 +41,22 @@ public class VoiceChatMod
     public void postInit(FMLPostInitializationEvent event)
     {
         getProxy().postInit();
+    }
+
+    @Mod.EventHandler
+    public void serverStartingEvent(FMLServerStartingEvent event)
+    {
+        getProxy().openServerSocket();
+    }
+
+    @Mod.EventHandler
+    public void serverStoppingEvent(FMLServerStoppingEvent event)
+    {
+        if (getProxy().getAudioNetworkServerBound() != null)
+        {
+            getProxy().getAudioNetworkServerBound().disconnect();
+            getProxy().getAudioNetworkServerBound().closeSocket();
+        }
     }
 
     public static VoiceChatMod getInstance()
